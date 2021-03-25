@@ -1,7 +1,5 @@
 import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 
 import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import {AppRoutes} from "./src/app.routes";

@@ -8,16 +8,17 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {MarginStyle} from "../style/margin.style";
 import {ColorConstants} from "../util/constants/color.constants";
 import React from 'react';
+import {RoutesCosntants} from "../util/constants/routes.constants";
 
 export const DrawerContent = (props) => (
     <View style={[FlexStyle.makeFlex(1)]}>
         <DrawerContentScrollView {...props}>
             <View style={[FlexStyle.flexOrientation.flexColumn]}>
                 <Drawer.Section style={[MarginStyle.makeMargin(10,0,10,5)]}>
-                    <DrawerItem label={'Cadastrar Usuário'} onPress={() => redirectTo('HOME')}
+                    <DrawerItem label={'Home'} onPress={() => redirectTo(props.navigation, RoutesCosntants.HOME)}
                                 icon={(color, size) => (<Icon name={'home-outline'} color={ColorConstants.VERDE_AGUA} size={25}/>)}
                     />
-                    <DrawerItem label={'Listar Usuário'} onPress={() => redirectTo('AREA')}
+                    <DrawerItem label={'Listar Usuário'} onPress={() => redirectTo(props.navigation, RoutesCosntants.LIST_USUARIO)}
                                 icon={(color, size) => (<Icon name={'paperclip'} color={ColorConstants.VERDE_AGUA} size={25}/>)}
                     />
                 </Drawer.Section>
@@ -26,6 +27,6 @@ export const DrawerContent = (props) => (
     </View>
 );
 
-const redirectTo = (screen) => {
-    this.props.navigation.navigate(screen);
+const redirectTo = (navigation, screen) => {
+    navigation.navigate(screen);
 }

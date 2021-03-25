@@ -1,7 +1,7 @@
-import {ActionsConstants} from "../../util/constants/actions.contants";
+import {ActionsConstants} from "../../../util/constants/actions.contants";
 
 export const updateUsuarios = (usuarios) => ({
-    type: ActionsConstants.USUARIO.UPDATE,
+    type: ActionsConstants.USUARIOS.UPDATE,
     usuarios,
 });
 
