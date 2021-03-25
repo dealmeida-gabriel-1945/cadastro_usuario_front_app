@@ -3,7 +3,6 @@ import {
     View, Text,
     SafeAreaView, ScrollView, RefreshControl
 } from "react-native";
-import {DatePicker} from 'native-base';
 import {Pagination} from "../../model/pagination.model";
 import {updateUsuarios} from "../../service/redux/actions/usuario.actions";
 import {connect} from "react-redux";
@@ -17,6 +16,7 @@ import {ActivityIndicatorComponent} from "../../components/activity-indicator.co
 import {MarginStyle} from "../../style/margin.style";
 import {FormError} from "../../model/form-error.model";
 import {ColorConstants} from "../../util/constants/color.constants";
+import {DatePicker} from "../../components/date-picker.component";
 
 class UsuarioFormPage extends React.Component {
     constructor(props) {
@@ -44,15 +44,18 @@ class UsuarioFormPage extends React.Component {
                             <TextInput
                                 label="Nome"
                                 type="outlined"
-                                value={usuario.nome}
-                                onChangeText={text => this.setState({login: usuario.setField('nome', text)})}
+                                value={this.state.usuario.nome}
+                                onChangeText={text => this.setState({usuario: usuario.setField('nome', text)})}
                             />
                             <HelperText type="error" visible={erroNome.present}>
                                 {erroNome.message}
                             </HelperText>
                         </View>
                         <View style={MarginStyle.makeMargin(0,0,0,5)}>
-
+                            <DatePicker
+                                value={this.state.usuario.dataNascimento}
+                                onChange={dataN => this.setState({usuario: usuario.setField('dataNascimento', dataN)})}
+                            />
                             <HelperText type="error" visible={erroNome.present}>
                                 {erroNome.message}
                             </HelperText>
