@@ -18,8 +18,11 @@ export const DrawerContent = (props) => (
                     <DrawerItem label={'Home'} onPress={() => redirectTo(props.navigation, RoutesCosntants.HOME)}
                                 icon={(color, size) => (<Icon name={'home-outline'} color={ColorConstants.VERDE_AGUA} size={25}/>)}
                     />
+                    <DrawerItem label={'Cadastrar Usuário'} onPress={() => redirectTo(props.navigation, RoutesCosntants.ADD_USUARIO)}
+                                icon={(color, size) => (<Icon name={'plus'} color={ColorConstants.VERDE_AGUA} size={25}/>)}
+                    />
                     <DrawerItem label={'Listar Usuário'} onPress={() => redirectTo(props.navigation, RoutesCosntants.LIST_USUARIO)}
-                                icon={(color, size) => (<Icon name={'paperclip'} color={ColorConstants.VERDE_AGUA} size={25}/>)}
+                                icon={(color, size) => (<Icon name={'format-list-bulleted'} color={ColorConstants.VERDE_AGUA} size={25}/>)}
                     />
                 </Drawer.Section>
             </View>

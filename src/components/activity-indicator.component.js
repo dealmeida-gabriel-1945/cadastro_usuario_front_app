@@ -5,6 +5,7 @@ import {PositionStyle} from "../style/position.style";
 import {FlexStyle} from "../style/flex.style";
 import {MarginStyle} from "../style/margin.style";
 import {TextStyle} from "../style/text.style";
+
 export const ActivityIndicatorComponent = ({frase = 'Carregando'}) => (
     <View style={[FlexStyle.makeFlex(1), PositionStyle.centralizadoXY]}>
         <View style={MarginStyle.makeMargin(10,10,10,10)}>

@@ -6,6 +6,7 @@ import {NavigationContainer} from "@react-navigation/native";
 import {DrawerContent} from "./components/drawer-content.component";
 import {RoutesCosntants} from "./util/constants/routes.constants";
 import UsuarioListPage from "./page/usuario/usuario-list.page";
+import UsuarioFormPage from "./page/usuario/usuario-form.page";
 
 
 const Drawer = createDrawerNavigator();
@@ -14,6 +15,7 @@ export const AppRoutes = () => (
         <Drawer.Navigator initialRouteName="HOME" drawerContent={props => <DrawerContent {...props}/>}>
             <Drawer.Screen name={RoutesCosntants.HOME} component={HomePage} />
             <Drawer.Screen name={RoutesCosntants.LIST_USUARIO} component={UsuarioListPage} />
+            <Drawer.Screen name={RoutesCosntants.ADD_USUARIO} component={UsuarioFormPage} />
         </Drawer.Navigator>
     </NavigationContainer>
 );

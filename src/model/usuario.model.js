@@ -9,7 +9,7 @@ export class Usuario extends ModelDefault{
     constructor(
         id,
         nome,
-        dataNascimento,
+        dataNascimento = new Date(),
         foto
     ) {
         super();

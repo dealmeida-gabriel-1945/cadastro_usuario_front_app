@@ -1,6 +1,7 @@
 import React from "react";
 import {
-    View, Text
+    View, Text,
+    SafeAreaView, ScrollView, RefreshControl
 } from "react-native";
 import {connect} from "react-redux";
 import {updateUsuarios} from "../../service/redux/actions/usuario.actions";
@@ -12,6 +13,7 @@ import {PositionStyle} from "../../style/position.style";
 import {PaddingStyle} from "../../style/padding.style";
 import {CustomHeader} from "../../components/custom-header.component";
 import {MarginStyle} from "../../style/margin.style";
+import {ActivityIndicatorComponent} from "../../components/activity-indicator.component";
 
 class UsuarioListPage extends React.Component {
     constructor(props) {
@@ -30,45 +32,56 @@ class UsuarioListPage extends React.Component {
     }
 
     buscaPage(){
-        return
         this.setLoading(true);
         UsuarioService.listUsuario(this.state.pagination)
             .then(response => {
                 this.updatePagination('totalElements', response.data.totalElements);
                 this.setState({areas: response.data.content})
-            }).catch(erro => console.log(erro)) //todo tratar
+                this.props.dipatchUpdateUsuario(response.data.content);
+            }).catch(erro => alert(`${ErrorHandler.getTitle(erro)} \n ${ErrorHandler.getMessage(erro)}`))
             .finally(() => this.setLoading(false))
     }
 
     render() {
         if(this.state.isLoading) return <View style={[PaddingStyle.makePadding(10,10,10,10), FlexStyle.makeFlex(1), PositionStyle.centralizadoXY]}><ActivityIndicatorComponent /></View>
-        let {pagination} = this.state;
+        let {pagination, isLoading} = this.state;
         return(
             <>
                 <CustomHeader drawerNavigation={this.state.navigation}/>
-
-                <View stle={[MarginStyle.makeMargin(10,10,10,10)]}>
-                    <DataTable>
-                        <DataTable.Header>
-                            <DataTable.Title>#</DataTable.Title>
-                            <DataTable.Title>Nome</DataTable.Title>
-                            <DataTable.Title>Data Nascimento</DataTable.Title>
-                            <DataTable.Title>Ações</DataTable.Title>
-                        </DataTable.Header>
-                        {this.renderRows()}
-                        <DataTable.Pagination
-                            page={pagination.page}
-                            numberOfPages={Math.floor(pagination.totalElements / pagination.size)}
-                            onPageChange={page => {
-                                if(!pagination.totalElements) return;
-                                this.setState({pagination: pagination.setField('page', page)})
-                                this.buscaPage();
-                            }}
-
-                            label={`${(pagination.page * pagination.size) + 1}-${(pagination.page * pagination.size) + pagination.size} de ${pagination.totalElements?pagination.totalElements: 0}`}
+                <SafeAreaView style={FlexStyle.makeFlex(1)}>
+                <ScrollView
+                    contentContainerStyle={FlexStyle.makeFlex(1)}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={isLoading}
+                            onRefresh={() => this.buscaPage()}
                         />
-                    </DataTable>
-                </View>
+                    }
+                >
+                    <View stle={[MarginStyle.makeMargin(10,10,10,10)]}>
+                        <DataTable>
+                            <DataTable.Header>
+                                <DataTable.Title>#</DataTable.Title>
+                                <DataTable.Title>Nome</DataTable.Title>
+                                <DataTable.Title>Data Nascimento</DataTable.Title>
+                                <DataTable.Title>Ações</DataTable.Title>
+                            </DataTable.Header>
+                            {this.renderRows()}
+                            <DataTable.Pagination
+                                page={pagination.page}
+                                numberOfPages={Math.floor(pagination.totalElements / pagination.size)}
+                                onPageChange={page => {
+                                    if(!pagination.totalElements) return;
+                                    this.setState({pagination: pagination.setField('page', page)})
+                                    this.buscaPage();
+                                }}
+
+                                label={`${(pagination.page * pagination.size) + 1}-${(pagination.page * pagination.size) + pagination.size} de ${pagination.totalElements?pagination.totalElements: 0}`}
+                            />
+                        </DataTable>
+                    </View>
+                </ScrollView>
+            </SafeAreaView>
             </>
         );
     }
