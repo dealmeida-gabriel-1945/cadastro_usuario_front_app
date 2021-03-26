@@ -1,10 +1,10 @@
 import React from "react";
 import {
     View, Text,
-    SafeAreaView, ScrollView, RefreshControl
+    SafeAreaView, ScrollView, RefreshControl, Pressable
 } from "react-native";
 import {connect} from "react-redux";
-import {updateUsuarios} from "../../service/redux/actions/usuario.actions";
+import {updateUsuario} from "../../service/redux/actions/usuario.actions";
 import {UsuarioService} from "../../service/usuario.service";
 import {Pagination} from "../../model/pagination.model";
 import {DataTable} from "react-native-paper";
@@ -15,14 +15,18 @@ import {CustomHeader} from "../../components/custom-header.component";
 import {MarginStyle} from "../../style/margin.style";
 import {ActivityIndicatorComponent} from "../../components/activity-indicator.component";
 import {AppUtil} from "../../util/app.util";
+import {ErrorHandler} from "../../util/handler/error.handler";
+import { Button, Icon} from 'native-base';
+import {ColorConstants} from "../../util/constants/color.constants";
 
 class UsuarioListPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            usuarios: (props.usuarios)? props.usuarios.usuarios : [],
+            usuarios: [],
             navigation: props.navigation,
             pagination: new Pagination(),
+            userToView: null,
 
             isLoading: false,
         };
@@ -38,13 +42,13 @@ class UsuarioListPage extends React.Component {
             .then(response => {
                 this.updatePagination('totalElements', response.data.totalElements);
                 this.setState({usuarios: response.data.content})
-                this.props.dipatchUpdateUsuario(response.data.content);
             }).catch(erro => alert(`${ErrorHandler.getTitle(erro)} \n ${ErrorHandler.getMessage(erro)}`))
             .finally(() => this.setLoading(false))
     }
 
     render() {
         if(this.state.isLoading) return <View style={[PaddingStyle.makePadding(10,10,10,10), FlexStyle.makeFlex(1), PositionStyle.centralizadoXY]}><ActivityIndicatorComponent /></View>
+        if((this.props.usuariosPage) && this.props.usuariosPage.content.length !== this.state.pagination.content.length) this.setState({pagination: this.props.usuariosPage})
         let {pagination, isLoading, usuarios} = this.state;
         return(
             <>
@@ -64,8 +68,8 @@ class UsuarioListPage extends React.Component {
                             <DataTable.Header>
                                 <DataTable.Title>#</DataTable.Title>
                                 <DataTable.Title>Nome</DataTable.Title>
-                                <DataTable.Title>Data Nascimento</DataTable.Title>
-                                <DataTable.Title>{pagination.totalElements} {pagination.size}</DataTable.Title>
+                                <DataTable.Title style={PositionStyle.centralizadoXY}>Data Nascimento</DataTable.Title>
+                                <DataTable.Title style={PositionStyle.centralizadoXY}>Ações</DataTable.Title>
                             </DataTable.Header>
                             {this.renderRows()}
                             <DataTable.Pagination
@@ -88,7 +92,6 @@ class UsuarioListPage extends React.Component {
 
     renderRows() {
         let {usuarios} = this.state;
-        console.log(usuarios)
         return (!usuarios || (usuarios.length === 0))
             ? (
                 <DataTable.Row key={1}>
@@ -101,7 +104,11 @@ class UsuarioListPage extends React.Component {
                         <DataTable.Cell>{usuario.id}</DataTable.Cell>
                         <DataTable.Cell>{usuario.nome}</DataTable.Cell>
                         <DataTable.Cell>{AppUtil.FORMATA_DATA(new Date(usuario.dataNascimento))}</DataTable.Cell>
-                        <DataTable.Cell>{usuario.dataNascimento}</DataTable.Cell>
+                        <DataTable.Cell style={PositionStyle.centralizadoXY}>
+                            <Button transparent onPress={() => this.props.dipatchUpdateUsuario(usuario)}>
+                                <Icon name='eye' style={{color: ColorConstants.VERDE_AGUA}}/>
+                            </Button>
+                        </DataTable.Cell>
                     </DataTable.Row>
                 )
             );
@@ -118,11 +125,10 @@ class UsuarioListPage extends React.Component {
 }
 
 const myMapDispatchToProps ={
-    dipatchUpdateUsuario: updateUsuarios,
+    dipatchUpdateUsuario: updateUsuario,
 };
 const mapStateToProps = state => {
-    const {usuarios} = state;
-    return {usuarios};
+    const {usuario} = state;
+    return {usuario : usuario};
 }
-//currying
 export default connect(mapStateToProps, myMapDispatchToProps)(UsuarioListPage);

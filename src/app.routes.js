@@ -6,7 +6,7 @@ import {NavigationContainer} from "@react-navigation/native";
 import {DrawerContent} from "./components/drawer-content.component";
 import {RoutesCosntants} from "./util/constants/routes.constants";
 import UsuarioListPage from "./page/usuario/usuario-list.page";
-import UsuarioFormPage from "./page/usuario/usuario-form.page";
+import {UsuarioFormPage} from "./page/usuario/usuario-form.page";
 
 
 const Drawer = createDrawerNavigator();

@@ -8,4 +8,9 @@ export const AppUtil = {
             return Math.floor(div) + 1;
         }
     },
+    TOAST: (mensagem = "Operação realizada com sucesso!", label = "Fechar", duracao = 2500) => ({
+        text: mensagem,
+        buttonText: label,
+        duration: duracao
+    })
 };

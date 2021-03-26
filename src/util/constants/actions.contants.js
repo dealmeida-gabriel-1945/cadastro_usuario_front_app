@@ -1,5 +1,5 @@
 export const ActionsConstants = {
-    USUARIOS: {
+    USUARIO: {
         UPDATE: 'UPDATE_USUARIO',
     },
 };

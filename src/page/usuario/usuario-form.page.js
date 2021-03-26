@@ -1,34 +1,29 @@
 import React from "react";
-import {
-    View, Text,
-    SafeAreaView, ScrollView, RefreshControl, Image
-} from "react-native";
+import { View, SafeAreaView, ScrollView } from "react-native";
 import {Pagination} from "../../model/pagination.model";
 import {updateUsuarios} from "../../service/redux/actions/usuario.actions";
 import {connect} from "react-redux";
 import {CustomHeader} from "../../components/custom-header.component";
 import {FlexStyle} from "../../style/flex.style";
-import {Button, HelperText, TextInput} from "react-native-paper";
+import {HelperText, TextInput} from "react-native-paper";
 import {Usuario} from "../../model/usuario.model";
 import {PaddingStyle} from "../../style/padding.style";
 import {PositionStyle} from "../../style/position.style";
 import {ActivityIndicatorComponent} from "../../components/activity-indicator.component";
 import {MarginStyle} from "../../style/margin.style";
 import {FormError} from "../../model/form-error.model";
-import * as ImagePicker from 'expo-image-picker';
 import {DatePicker} from "../../components/date-picker.component";
 import {FilePicker} from "../../components/file-picker.component";
 import {EndForm} from "../../components/end-form.component";
 import {ErrorHandler} from "../../util/handler/error.handler";
 import {UsuarioService} from "../../service/usuario.service";
 
-class UsuarioFormPage extends React.Component {
+export class UsuarioFormPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             usuario: new Usuario(undefined, 'Teste'),
             navigation: props.navigation,
-            pagination: new Pagination(),
 
             erroNome: new FormError(false),
             erroDataNascimento: new FormError(false),
@@ -85,10 +80,12 @@ class UsuarioFormPage extends React.Component {
 
     submeteFormulario() {
         if(!this.checkCampos()) return;
+        this.setLoading(true);
         UsuarioService.addUsuario(this.state.usuario)
             .then(response => {
-
-            }).catch(erro => alert(`${ErrorHandler.getTitle(erro)} \n ${ErrorHandler.getMessage(erro)}`));
+                alert("Operação realizada com sucesso!")
+            }).catch(erro => alert(`${ErrorHandler.getTitle(erro)} \n ${ErrorHandler.getMessage(erro)}`))
+            .finally(() => this.setLoading(false));
     }
 
     checkCampos() {
@@ -107,13 +104,7 @@ class UsuarioFormPage extends React.Component {
         }
         return true;
     }
+    setLoading(loading){
+        this.setState({isLoading: loading});
+    }
 }
-const myMapDispatchToProps ={
-    dipatchUpdateUsuario: updateUsuarios,
-};
-const mapStateToProps = state => {
-    const {usuarios} = state;
-    return {usuarios};
-}
-//currying
-export default connect(mapStateToProps, myMapDispatchToProps)(UsuarioFormPage);
