@@ -8,9 +8,9 @@ export class Usuario extends ModelDefault{
 
     constructor(
         id,
-        nome,
+        nome = '',
         dataNascimento = new Date(),
-        foto
+        foto = undefined
     ) {
         super();
         this.id = id;

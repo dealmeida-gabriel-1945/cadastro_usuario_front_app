@@ -14,6 +14,7 @@ import {PaddingStyle} from "../../style/padding.style";
 import {CustomHeader} from "../../components/custom-header.component";
 import {MarginStyle} from "../../style/margin.style";
 import {ActivityIndicatorComponent} from "../../components/activity-indicator.component";
+import {AppUtil} from "../../util/app.util";
 
 class UsuarioListPage extends React.Component {
     constructor(props) {
@@ -36,7 +37,7 @@ class UsuarioListPage extends React.Component {
         UsuarioService.listUsuario(this.state.pagination)
             .then(response => {
                 this.updatePagination('totalElements', response.data.totalElements);
-                this.setState({areas: response.data.content})
+                this.setState({usuarios: response.data.content})
                 this.props.dipatchUpdateUsuario(response.data.content);
             }).catch(erro => alert(`${ErrorHandler.getTitle(erro)} \n ${ErrorHandler.getMessage(erro)}`))
             .finally(() => this.setLoading(false))
@@ -44,7 +45,7 @@ class UsuarioListPage extends React.Component {
 
     render() {
         if(this.state.isLoading) return <View style={[PaddingStyle.makePadding(10,10,10,10), FlexStyle.makeFlex(1), PositionStyle.centralizadoXY]}><ActivityIndicatorComponent /></View>
-        let {pagination, isLoading} = this.state;
+        let {pagination, isLoading, usuarios} = this.state;
         return(
             <>
                 <CustomHeader drawerNavigation={this.state.navigation}/>
@@ -64,14 +65,13 @@ class UsuarioListPage extends React.Component {
                                 <DataTable.Title>#</DataTable.Title>
                                 <DataTable.Title>Nome</DataTable.Title>
                                 <DataTable.Title>Data Nascimento</DataTable.Title>
-                                <DataTable.Title>Ações</DataTable.Title>
+                                <DataTable.Title>{pagination.totalElements} {pagination.size}</DataTable.Title>
                             </DataTable.Header>
                             {this.renderRows()}
                             <DataTable.Pagination
                                 page={pagination.page}
-                                numberOfPages={Math.floor(pagination.totalElements / pagination.size)}
+                                numberOfPages={AppUtil.NUMBER_OF_PAGES(pagination.totalElements, pagination.size)}
                                 onPageChange={page => {
-                                    if(!pagination.totalElements) return;
                                     this.setState({pagination: pagination.setField('page', page)})
                                     this.buscaPage();
                                 }}
@@ -88,6 +88,7 @@ class UsuarioListPage extends React.Component {
 
     renderRows() {
         let {usuarios} = this.state;
+        console.log(usuarios)
         return (!usuarios || (usuarios.length === 0))
             ? (
                 <DataTable.Row key={1}>
@@ -96,12 +97,12 @@ class UsuarioListPage extends React.Component {
             )
             : usuarios.map(
                 usuario => (
-                    <>
+                    <DataTable.Row key={usuario.id}>
                         <DataTable.Cell>{usuario.id}</DataTable.Cell>
                         <DataTable.Cell>{usuario.nome}</DataTable.Cell>
+                        <DataTable.Cell>{AppUtil.FORMATA_DATA(new Date(usuario.dataNascimento))}</DataTable.Cell>
                         <DataTable.Cell>{usuario.dataNascimento}</DataTable.Cell>
-                        <DataTable.Cell>{usuario.dataNascimento}</DataTable.Cell>
-                    </>
+                    </DataTable.Row>
                 )
             );
     }

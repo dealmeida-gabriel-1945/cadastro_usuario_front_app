@@ -5,6 +5,7 @@ import {IconButton, TextInput} from "react-native-paper";
 import {ColorConstants} from "../util/constants/color.constants";
 import {FlexStyle} from "../style/flex.style";
 import {PositionStyle} from "../style/position.style";
+import {AppUtil} from "../util/app.util";
 
 export class DatePicker extends React.Component{
     constructor(props) {
@@ -25,7 +26,7 @@ export class DatePicker extends React.Component{
                         label="Data de Nascimento"
                         type="outlined"
                         disabled={true}
-                        value={`${value.getDate()}/${(value.getMonth() < 9) ? '0':''}${value.getMonth()+1}/${value.getFullYear()}`}
+                        value={AppUtil.FORMATA_DATA(value)}
                         onChangeText={text => this.setState({login: usuario.setField('nome', text)})}
                     />
                 </View>
@@ -40,7 +41,7 @@ export class DatePicker extends React.Component{
                 {   this.state.showing &&
                     (<DateTimePicker
                         testID="dateTimePicker"
-                        value={this.state.value}
+                        value={this.props.value}
                         maximumDate={new Date()}
                         mode="date"
                         is24Hour={true}
