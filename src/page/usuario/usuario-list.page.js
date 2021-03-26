@@ -18,6 +18,7 @@ import {AppUtil} from "../../util/app.util";
 import {ErrorHandler} from "../../util/handler/error.handler";
 import { Button, Icon} from 'native-base';
 import {ColorConstants} from "../../util/constants/color.constants";
+import ShowUsuario from "../../components/show-usuario.component";
 
 class UsuarioListPage extends React.Component {
     constructor(props) {
@@ -53,6 +54,7 @@ class UsuarioListPage extends React.Component {
         return(
             <>
                 <CustomHeader drawerNavigation={this.state.navigation}/>
+                <ShowUsuario />
                 <SafeAreaView style={FlexStyle.makeFlex(1)}>
                 <ScrollView
                     contentContainerStyle={FlexStyle.makeFlex(1)}
