@@ -4,7 +4,7 @@ import {UsuarioService} from "../../service/usuario.service";
 import {ErrorHandler} from "../handler/error.handler";
 
 export const MessageConstants = {
-    SUCESSO: 'Operação realziada com sucesso!',
+    SUCESSO: 'Operação realizada com sucesso!',
     MOSTRAR_MENSAGEM_DE_SUCESSO: () => {
         AlertFunction(
             'Sucesso!', MessageConstants.SUCESSO,

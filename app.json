@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/devel-code-logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
