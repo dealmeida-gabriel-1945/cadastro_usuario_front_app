@@ -19,6 +19,7 @@ import {ErrorHandler} from "../../util/handler/error.handler";
 import {UsuarioService} from "../../service/usuario.service";
 import {updateUsuarioEdit} from "../../service/redux/actions/usuario-edit.action";
 import {RoutesConstants} from "../../util/constants/routes.constants";
+import {MessageConstants} from "../../util/constants/message.constants";
 
 
 
@@ -91,7 +92,8 @@ class UsuarioEditPage extends React.Component {
         this.setLoading(true);
         UsuarioService.updateUsuario(this.state.usuario)
             .then(response => {
-                alert("Operação realizada com sucesso!")
+                MessageConstants.MOSTRAR_MENSAGEM_DE_SUCESSO();
+                this.state.navigation.goBack();
             }).catch(erro => alert(`${ErrorHandler.getTitle(erro)} \n ${ErrorHandler.getMessage(erro)}`))
             .finally(() => this.setLoading(false));
     }

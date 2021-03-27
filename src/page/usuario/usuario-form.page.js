@@ -14,12 +14,14 @@ import {FilePicker} from "../../components/file-picker.component";
 import {EndForm} from "../../components/end-form.component";
 import {ErrorHandler} from "../../util/handler/error.handler";
 import {UsuarioService} from "../../service/usuario.service";
+import {RoutesConstants} from "../../util/constants/routes.constants";
+import {MessageConstants} from "../../util/constants/message.constants";
 
 export class UsuarioFormPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            usuario: new Usuario(undefined, 'Teste'),
+            usuario: new Usuario(),
             navigation: props.navigation,
 
             erroNome: new FormError(false),
@@ -28,6 +30,13 @@ export class UsuarioFormPage extends React.Component {
             isLoading: false,
         };
     }
+
+    componentDidMount() {
+        this._unsubscribe = this.state.navigation.addListener('focus', () => {
+            this.setState({usuario: new Usuario()})
+        });
+    }
+
     render() {
         if(this.state.isLoading) return <View style={[PaddingStyle.makePadding(10,10,10,10), FlexStyle.makeFlex(1), PositionStyle.centralizadoXY]}><ActivityIndicatorComponent /></View>
         let {usuario, erroNome, erroDataNascimento} = this.state;
@@ -67,6 +76,7 @@ export class UsuarioFormPage extends React.Component {
                                 isCancel={false}
                                 onWipeOut={() => this.setState({usuario: new Usuario()})}
                                 onSubmit={() => this.submeteFormulario()}
+                                onSubmitLabel="Cadastrar"
                             />
                         </View>
                     </ScrollView>
@@ -80,7 +90,9 @@ export class UsuarioFormPage extends React.Component {
         this.setLoading(true);
         UsuarioService.addUsuario(this.state.usuario)
             .then(response => {
-                alert("Operação realizada com sucesso!")
+                this.setState({usuario: new Usuario()});
+                MessageConstants.MOSTRAR_MENSAGEM_DE_SUCESSO();
+                this.state.navigation.navigate(RoutesConstants.LIST_USUARIO);
             }).catch(erro => alert(`${ErrorHandler.getTitle(erro)} \n ${ErrorHandler.getMessage(erro)}`))
             .finally(() => this.setLoading(false));
     }

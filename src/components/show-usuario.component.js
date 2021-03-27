@@ -16,17 +16,18 @@ import {MessageConstants} from "../util/constants/message.constants";
 import {ErrorHandler} from "../util/handler/error.handler";
 import {updateUsuarioEdit} from "../service/redux/actions/usuario-edit.action";
 import {RoutesConstants} from "../util/constants/routes.constants";
+import {updateUsuarioFoto} from "../service/redux/actions/usuario-foto.action";
 
 const ShowUsuario = ({
-    usuario = null, dispatchUpdateUsuario, dispatchUpdateUsuarioEdit,
-    navigation
+    usuario = null, navigation,
+     dispatchUpdateUsuario, dispatchUpdateUsuarioEdit,
 }) => {
     return(
         <Portal>
             <Modal visible={!!usuario.usuario} onDismiss={() => dispatchUpdateUsuario(null)} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
                 <View style={PositionStyle.centralizadoX}>
                     <Avatar.Image
-                        source={{uri: `data:image/png;base64,${usuario.usuario?.foto}`}}
+                        source={montaImagem(usuario.usuario?.foto)}
                         size={150}
                     />
                 </View>
@@ -81,9 +82,15 @@ const myMapDispatchToProps ={
 };
 const mapStateToProps = state => {
     const {usuario} = state;
-    return {usuario : usuario};
+    return {usuario};
 }
 export default connect(mapStateToProps, myMapDispatchToProps)(ShowUsuario);
+
+const montaImagem = (base64) => {
+    return (!base64 || (base64.length === 0))
+        ? require('../../assets/stock-user-photo.png')
+        : {uri: `data:image/png;base64,${base64}`};
+}
 
 const deleteUser = (id, exit) => {
     AlertFunction(
@@ -93,7 +100,7 @@ const deleteUser = (id, exit) => {
             new AlertOption('Sim', () => {
                 UsuarioService.deleteUsuario(id)
                     .then(res => {
-                        alert(MessageConstants.SUCESSO);
+                        MessageConstants.MOSTRAR_MENSAGEM_DE_SUCESSO();
                         exit(null);
                     }).catch(erro => alert(ErrorHandler.getMessage(erro)))
             })

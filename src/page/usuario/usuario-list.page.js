@@ -19,6 +19,7 @@ import {ErrorHandler} from "../../util/handler/error.handler";
 import { Button, Icon} from 'native-base';
 import {ColorConstants} from "../../util/constants/color.constants";
 import ShowUsuario from "../../components/show-usuario.component";
+import {updateUsuarioFoto} from "../../service/redux/actions/usuario-foto.action";
 
 class UsuarioListPage extends React.Component {
     constructor(props) {
@@ -34,7 +35,9 @@ class UsuarioListPage extends React.Component {
     }
 
     componentDidMount() {
-        this.buscaPage();
+        this._unsubscribe = this.state.navigation.addListener('focus', () => {
+            this.buscaPage()
+        });
     }
 
     buscaPage(){
@@ -50,7 +53,7 @@ class UsuarioListPage extends React.Component {
     render() {
         if(this.state.isLoading) return <View style={[PaddingStyle.makePadding(10,10,10,10), FlexStyle.makeFlex(1), PositionStyle.centralizadoXY]}><ActivityIndicatorComponent /></View>
         if((this.props.usuariosPage) && this.props.usuariosPage.content.length !== this.state.pagination.content.length) this.setState({pagination: this.props.usuariosPage})
-        let {pagination, isLoading, usuarios} = this.state;
+        let {pagination, isLoading} = this.state;
         return(
             <>
                 <CustomHeader drawerNavigation={this.state.navigation}/>
@@ -107,7 +110,16 @@ class UsuarioListPage extends React.Component {
                         <DataTable.Cell>{usuario.nome}</DataTable.Cell>
                         <DataTable.Cell>{AppUtil.FORMATA_DATA(new Date(usuario.dataNascimento))}</DataTable.Cell>
                         <DataTable.Cell style={PositionStyle.centralizadoXY}>
-                            <Button transparent onPress={() => this.props.dipatchUpdateUsuario(usuario)}>
+                            <Button transparent onPress={() => {
+                                this.setLoading(true);
+                                UsuarioService.getFoto(usuario.id)
+                                    .then(res => usuario.foto = res.data)
+                                    .catch((erro) => {console.log(erro)})
+                                    .finally(() => {
+                                        this.setLoading(false);
+                                        this.props.dipatchUpdateUsuario(usuario);
+                                    })
+                            }}>
                                 <Icon name='eye' style={{color: ColorConstants.VERDE_AGUA}}/>
                             </Button>
                         </DataTable.Cell>
@@ -128,6 +140,7 @@ class UsuarioListPage extends React.Component {
 
 const myMapDispatchToProps ={
     dipatchUpdateUsuario: updateUsuario,
+    dipatchUpdateUsuarioFoto: updateUsuarioFoto,
 };
 const mapStateToProps = state => {
     const {usuario} = state;
