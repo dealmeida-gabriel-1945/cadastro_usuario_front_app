@@ -11,7 +11,6 @@ export const TextStyle = {
         azul: {color: ColorConstants.AZUL},
         branco: {color: ColorConstants.BRANCO},
         preto: {color: 'black'},
-        verdePadrao: {color: ColorConstants.VERDE_PADRAO},
         vermelho: {color: ColorConstants.VERMELHO},
         fromColor: (color) => ({color: color}),
     },

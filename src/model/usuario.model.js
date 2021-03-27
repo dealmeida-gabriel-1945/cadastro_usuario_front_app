@@ -1,4 +1,6 @@
-export class Usuario{
+import {ModelDefault} from "./model.default";
+
+export class Usuario extends ModelDefault{
     id;
     nome;
     dataNascimento;
@@ -6,10 +8,11 @@ export class Usuario{
 
     constructor(
         id,
-        nome,
-        dataNascimento,
-        foto
+        nome = '',
+        dataNascimento = new Date(),
+        foto = undefined
     ) {
+        super();
         this.id = id;
         this.nome = nome;
         this.dataNascimento = dataNascimento;

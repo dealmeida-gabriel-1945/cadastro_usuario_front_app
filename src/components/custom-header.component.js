@@ -2,18 +2,11 @@ import React from "react";
 import {
     Header,
     Left,
-    Right,
     Body,
-    Title,
 } from "native-base";
-import {
-    Text,
-    View,
-} from "react-native";
 import {ColorConstants} from "../util/constants/color.constants";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {PaddingStyle} from "../style/padding.style";
-import {TextStyle} from "../style/text.style";
 
 export const CustomHeader = ({drawerNavigation}) => (
 
