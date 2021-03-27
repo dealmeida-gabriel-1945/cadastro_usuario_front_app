@@ -4,7 +4,7 @@ import {
     SafeAreaView, ScrollView, RefreshControl, Pressable
 } from "react-native";
 import {connect} from "react-redux";
-import {updateUsuario} from "../../service/redux/actions/usuario.actions";
+import {updateUsuario} from "../../service/redux/actions/usuario.action";
 import {UsuarioService} from "../../service/usuario.service";
 import {Pagination} from "../../model/pagination.model";
 import {DataTable} from "react-native-paper";
@@ -54,7 +54,7 @@ class UsuarioListPage extends React.Component {
         return(
             <>
                 <CustomHeader drawerNavigation={this.state.navigation}/>
-                <ShowUsuario />
+                <ShowUsuario navigation={this.props.navigation}/>
                 <SafeAreaView style={FlexStyle.makeFlex(1)}>
                 <ScrollView
                     contentContainerStyle={FlexStyle.makeFlex(1)}
@@ -131,6 +131,6 @@ const myMapDispatchToProps ={
 };
 const mapStateToProps = state => {
     const {usuario} = state;
-    return {usuario : usuario};
+    return {usuario};
 }
 export default connect(mapStateToProps, myMapDispatchToProps)(UsuarioListPage);

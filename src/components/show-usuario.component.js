@@ -1,7 +1,7 @@
 import React from "react";
 import {Avatar, IconButton, Modal, Portal} from "react-native-paper";
 import {Text, View} from "react-native";
-import {updateUsuario} from "../service/redux/actions/usuario.actions";
+import {updateUsuario} from "../service/redux/actions/usuario.action";
 import {connect} from "react-redux";
 import {PositionStyle} from "../style/position.style";
 import {FlexStyle} from "../style/flex.style";
@@ -9,9 +9,17 @@ import {MarginStyle} from "../style/margin.style";
 import {AppUtil} from "../util/app.util";
 import {TextStyle} from "../style/text.style";
 import {ColorConstants} from "../util/constants/color.constants";
+import {AlertFunction} from "./functions/alert-function.component";
+import {AlertOption} from "../model/alert-option.model";
+import {UsuarioService} from "../service/usuario.service";
+import {MessageConstants} from "../util/constants/message.constants";
+import {ErrorHandler} from "../util/handler/error.handler";
+import {updateUsuarioEdit} from "../service/redux/actions/usuario-edit.action";
+import {RoutesConstants} from "../util/constants/routes.constants";
 
 const ShowUsuario = ({
-    usuario = null, dispatchUpdateUsuario
+    usuario = null, dispatchUpdateUsuario, dispatchUpdateUsuarioEdit,
+    navigation
 }) => {
     return(
         <Portal>
@@ -46,7 +54,11 @@ const ShowUsuario = ({
                             icon="account-edit"
                             color={ColorConstants.AMARELO}
                             size={30}
-                            onPress={() => console.log('Pressed')}
+                            onPress={() => {
+                                dispatchUpdateUsuarioEdit(usuario.usuario)
+                                dispatchUpdateUsuario(null)
+                                navigation.navigate(RoutesConstants.EDIT_USUARIO)
+                            }}
                         />
                     </View>
                     <View style={[FlexStyle.makeFlex(1), PositionStyle.centralizadoXY]}>
@@ -54,7 +66,7 @@ const ShowUsuario = ({
                             icon="delete"
                             color={ColorConstants.VERMELHO}
                             size={30}
-                            onPress={() => console.log('Pressed')}
+                            onPress={() => deleteUser(usuario.usuario?.id, dispatchUpdateUsuario)}
                         />
                     </View>
                 </View>
@@ -65,9 +77,26 @@ const ShowUsuario = ({
 
 const myMapDispatchToProps ={
     dispatchUpdateUsuario: updateUsuario,
+    dispatchUpdateUsuarioEdit: updateUsuarioEdit,
 };
 const mapStateToProps = state => {
     const {usuario} = state;
     return {usuario : usuario};
 }
 export default connect(mapStateToProps, myMapDispatchToProps)(ShowUsuario);
+
+const deleteUser = (id, exit) => {
+    AlertFunction(
+        'Atenção', 'Você deseja remover este usuário?',
+        [
+            new AlertOption('Não'),
+            new AlertOption('Sim', () => {
+                UsuarioService.deleteUsuario(id)
+                    .then(res => {
+                        alert(MessageConstants.SUCESSO);
+                        exit(null);
+                    }).catch(erro => alert(ErrorHandler.getMessage(erro)))
+            })
+        ]
+    );
+}

@@ -1,5 +1,8 @@
 import React from "react";
 import { View, SafeAreaView, ScrollView } from "react-native";
+import {Pagination} from "../../model/pagination.model";
+import {updateUsuario, updateUsuarios} from "../../service/redux/actions/usuario.action";
+import {connect} from "react-redux";
 import {CustomHeader} from "../../components/custom-header.component";
 import {FlexStyle} from "../../style/flex.style";
 import {HelperText, TextInput} from "react-native-paper";
@@ -14,12 +17,18 @@ import {FilePicker} from "../../components/file-picker.component";
 import {EndForm} from "../../components/end-form.component";
 import {ErrorHandler} from "../../util/handler/error.handler";
 import {UsuarioService} from "../../service/usuario.service";
+import {updateUsuarioEdit} from "../../service/redux/actions/usuario-edit.action";
+import {RoutesConstants} from "../../util/constants/routes.constants";
 
-export class UsuarioFormPage extends React.Component {
+
+
+class UsuarioEditPage extends React.Component {
     constructor(props) {
         super(props);
+        let {usuarioEdit} = props;
         this.state = {
-            usuario: new Usuario(undefined, 'Teste'),
+            usuario: new Usuario(usuarioEdit.id, usuarioEdit.nome, new Date(usuarioEdit.dataNascimento), usuarioEdit.foto),
+            usuarioBackup: new Usuario(usuarioEdit.id, usuarioEdit.nome, new Date(usuarioEdit.dataNascimento), usuarioEdit.foto),
             navigation: props.navigation,
 
             erroNome: new FormError(false),
@@ -30,7 +39,7 @@ export class UsuarioFormPage extends React.Component {
     }
     render() {
         if(this.state.isLoading) return <View style={[PaddingStyle.makePadding(10,10,10,10), FlexStyle.makeFlex(1), PositionStyle.centralizadoXY]}><ActivityIndicatorComponent /></View>
-        let {usuario, erroNome, erroDataNascimento} = this.state;
+        let {usuario, erroNome, usuarioBackup} = this.state;
         return(
             <>
                 <CustomHeader drawerNavigation={this.state.navigation}/>
@@ -64,9 +73,11 @@ export class UsuarioFormPage extends React.Component {
                         </View>
                         <View style={MarginStyle.makeMargin(0,10,0,5)}>
                             <EndForm
-                                isCancel={false}
-                                onWipeOut={() => this.setState({usuario: new Usuario()})}
+                                onWipeOut={() => this.setState({usuario: usuarioBackup})}
                                 onSubmit={() => this.submeteFormulario()}
+                                onSubmitLabel={'Editar'}
+                                onCancel={() => this.state.navigation.navigate(RoutesConstants.LIST_USUARIO)}
+                                onCancelIcon="arrow-left"
                             />
                         </View>
                     </ScrollView>
@@ -78,7 +89,7 @@ export class UsuarioFormPage extends React.Component {
     submeteFormulario() {
         if(!this.checkCampos()) return;
         this.setLoading(true);
-        UsuarioService.addUsuario(this.state.usuario)
+        UsuarioService.updateUsuario(this.state.usuario)
             .then(response => {
                 alert("Operação realizada com sucesso!")
             }).catch(erro => alert(`${ErrorHandler.getTitle(erro)} \n ${ErrorHandler.getMessage(erro)}`))
@@ -105,3 +116,12 @@ export class UsuarioFormPage extends React.Component {
         this.setState({isLoading: loading});
     }
 }
+
+const myMapDispatchToProps ={
+    dispatchUpdateUsuarioEdit: updateUsuarioEdit,
+};
+const mapStateToProps = state => {
+    const {usuario} = state;
+    return {usuarioEdit: usuario.usuarioEdit};
+}
+export default connect(mapStateToProps, myMapDispatchToProps)(UsuarioEditPage);

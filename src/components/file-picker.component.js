@@ -22,7 +22,7 @@ export const FilePicker = ({value, onChange}) => {
         if (pickerResult.cancelled === true) {
             return;
         }
-        onChange(pickerResult);
+        onChange(pickerResult.base64);
     }
 
     return(
@@ -42,7 +42,7 @@ export const FilePicker = ({value, onChange}) => {
                             ]
                         )}>
                         <Avatar.Image
-                            source={{uri: value.uri}}
+                            source={{uri: `data:image/png;base64,${value}`}}
                             size={150}
                         />
                         </Pressable>

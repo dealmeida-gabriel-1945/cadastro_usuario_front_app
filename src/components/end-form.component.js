@@ -8,35 +8,35 @@ import {ColorConstants} from "../util/constants/color.constants";
 import {Button} from "react-native-paper";
 
 export const EndForm = ({
-     isCancel = true, onCancel = () => null,
-     isWipeOut = true, onWipeOut = () => null,
-     isSubmit = true, onSubmit = () => null,
+     isCancel = true, onCancel = () => null, onCancelLabel = 'Voltar', onCancelIcon = 'cancel',
+     isWipeOut = true, onWipeOut = () => null, onWipeOutLabel = 'Limpar', onWipeOutIcon = 'alert',
+     isSubmit = true, onSubmit = () => null, onSubmitLabel = 'Próximo', onSubmitIcon = 'login',
  }) => (
 
     <View style={[FlexStyle.makeFlex(1), FlexStyle.flexOrientation.flexRow]}>
-        {(isCancel) ? renderCancel(onCancel) : null}
-        {(isWipeOut) ? renderWipeOut(onWipeOut) : null}
-        {(isSubmit) ? renderSubmit(onSubmit) : null}
+        {(isCancel) ? renderCancel(onCancel, onCancelLabel, onCancelIcon) : null}
+        {(isWipeOut) ? renderWipeOut(onWipeOut, onWipeOutLabel, onWipeOutIcon) : null}
+        {(isSubmit) ? renderSubmit(onSubmit, onSubmitLabel, onSubmitIcon) : null}
     </View>
 );
-const renderCancel = (onClick) => (
+const renderCancel = (onClick, label, icon) => (
     <View style={[FlexStyle.makeFlex(1), MarginStyle.makeMargin(5,5,5,5)]}>
-        <Button icon="cancel" mode="contained" onPress={() => onClick()} color={ColorConstants.VERMELHO}>
-            Voltar
+        <Button icon={icon} mode="contained" onPress={() => onClick()} color={ColorConstants.VERMELHO}>
+            {label}
         </Button>
     </View>
 );
-const renderWipeOut = (onClick) => (
+const renderWipeOut = (onClick, label, icon) => (
     <View style={[FlexStyle.makeFlex(1), MarginStyle.makeMargin(5,5,5,5)]}>
-        <Button icon="alert" mode="contained" onPress={() => onClick()} color={ColorConstants.AMARELO}>
-            Limpar
+        <Button icon={icon} mode="contained" onPress={() => onClick()} color={ColorConstants.AMARELO}>
+            {label}
         </Button>
     </View>
 );
-const renderSubmit = (onClick) => (
+const renderSubmit = (onClick, label, icon) => (
     <View style={[FlexStyle.makeFlex(1), MarginStyle.makeMargin(5,5,5,5)]}>
-        <Button icon="login" mode="contained" onPress={() => onClick()} color={ColorConstants.VERDE_ESCURO}>
-            Próximo
+        <Button icon={icon} mode="contained" onPress={() => onClick()} color={ColorConstants.VERDE_ESCURO}>
+            {label}
         </Button>
     </View>
 );
