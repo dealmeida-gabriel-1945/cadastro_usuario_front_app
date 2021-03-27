@@ -1,5 +1,5 @@
 import React from "react";
-import { View, SafeAreaView, ScrollView } from "react-native";
+import {View, SafeAreaView, ScrollView, BackHandler} from "react-native";
 import {CustomHeader} from "../../components/custom-header.component";
 import {FlexStyle} from "../../style/flex.style";
 import {HelperText, TextInput} from "react-native-paper";

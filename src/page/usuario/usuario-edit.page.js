@@ -1,5 +1,5 @@
 import React from "react";
-import { View, SafeAreaView, ScrollView } from "react-native";
+import {View, SafeAreaView, ScrollView, BackHandler} from "react-native";
 import {Pagination} from "../../model/pagination.model";
 import {updateUsuario, updateUsuarios} from "../../service/redux/actions/usuario.action";
 import {connect} from "react-redux";
@@ -38,6 +38,7 @@ class UsuarioEditPage extends React.Component {
             isLoading: false,
         };
     }
+
     render() {
         if(this.state.isLoading) return <View style={[PaddingStyle.makePadding(10,10,10,10), FlexStyle.makeFlex(1), PositionStyle.centralizadoXY]}><ActivityIndicatorComponent /></View>
         let {usuario, erroNome, usuarioBackup} = this.state;

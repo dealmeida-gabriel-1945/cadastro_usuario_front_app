@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    View, Text,
+    View, BackHandler,
     SafeAreaView, ScrollView, RefreshControl, Pressable
 } from "react-native";
 import {connect} from "react-redux";
@@ -114,7 +114,7 @@ class UsuarioListPage extends React.Component {
                                 this.setLoading(true);
                                 UsuarioService.getFoto(usuario.id)
                                     .then(res => usuario.foto = res.data)
-                                    .catch((erro) => {console.log(erro)})
+                                    .catch((erro) => {usuario.foto = undefined})
                                     .finally(() => {
                                         this.setLoading(false);
                                         this.props.dipatchUpdateUsuario(usuario);
