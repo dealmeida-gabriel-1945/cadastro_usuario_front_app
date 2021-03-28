@@ -17,7 +17,10 @@ export const FilePicker = ({value, onChange}) => {
             return;
         }
 
-        let pickerResult = await ImagePicker.launchImageLibraryAsync({base64: true});
+        let pickerResult = await ImagePicker.launchImageLibraryAsync({
+            base64: true,
+            quality: 0.1
+        });
 
         if (pickerResult.cancelled === true) {
             return;
@@ -31,7 +34,7 @@ export const FilePicker = ({value, onChange}) => {
                 Selecionar arquivo de foto
             </Button>
             {
-                value &&
+                value ?
                 (
                     <View style={[FlexStyle.makeFlex(1), PositionStyle.centralizadoXY, PaddingStyle.makePadding(0,10)]}>
                         <Pressable onLongPress={() => AlertFunction(
@@ -47,7 +50,7 @@ export const FilePicker = ({value, onChange}) => {
                         />
                         </Pressable>
                     </View>
-                )
+                ) : null
             }
         </View>
     );

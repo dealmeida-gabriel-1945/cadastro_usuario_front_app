@@ -18,15 +18,15 @@ import {updateUsuarioEdit} from "../service/redux/actions/usuario-edit.action";
 import {RoutesConstants} from "../util/constants/routes.constants";
 
 const ShowUsuario = ({
-    usuario = null, dispatchUpdateUsuario, dispatchUpdateUsuarioEdit,
-    navigation
+    usuario = null, navigation, onDelete = () => {},
+     dispatchUpdateUsuario, dispatchUpdateUsuarioEdit,
 }) => {
     return(
         <Portal>
             <Modal visible={!!usuario.usuario} onDismiss={() => dispatchUpdateUsuario(null)} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
                 <View style={PositionStyle.centralizadoX}>
                     <Avatar.Image
-                        source={{uri: `data:image/png;base64,${usuario.usuario?.foto}`}}
+                        source={montaImagem(usuario.usuario?.foto)}
                         size={150}
                     />
                 </View>
@@ -66,7 +66,7 @@ const ShowUsuario = ({
                             icon="delete"
                             color={ColorConstants.VERMELHO}
                             size={30}
-                            onPress={() => deleteUser(usuario.usuario?.id, dispatchUpdateUsuario)}
+                            onPress={() => deleteUser(usuario.usuario?.id, dispatchUpdateUsuario, onDelete)}
                         />
                     </View>
                 </View>
@@ -81,11 +81,17 @@ const myMapDispatchToProps ={
 };
 const mapStateToProps = state => {
     const {usuario} = state;
-    return {usuario : usuario};
+    return {usuario};
 }
 export default connect(mapStateToProps, myMapDispatchToProps)(ShowUsuario);
 
-const deleteUser = (id, exit) => {
+const montaImagem = (base64) => {
+    return (!base64 || (base64.length === 0))
+        ? require('../../assets/stock-user-photo.png')
+        : {uri: `data:image/png;base64,${base64}`};
+}
+
+const deleteUser = (id, exit, onDelete) => {
     AlertFunction(
         'Atenção', 'Você deseja remover este usuário?',
         [
@@ -93,8 +99,9 @@ const deleteUser = (id, exit) => {
             new AlertOption('Sim', () => {
                 UsuarioService.deleteUsuario(id)
                     .then(res => {
-                        alert(MessageConstants.SUCESSO);
+                        MessageConstants.MOSTRAR_MENSAGEM_DE_SUCESSO();
                         exit(null);
+                        onDelete();
                     }).catch(erro => alert(ErrorHandler.getMessage(erro)))
             })
         ]

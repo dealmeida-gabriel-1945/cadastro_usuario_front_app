@@ -10,7 +10,7 @@ import {Button} from "react-native-paper";
 export const EndForm = ({
      isCancel = true, onCancel = () => null, onCancelLabel = 'Voltar', onCancelIcon = 'cancel',
      isWipeOut = true, onWipeOut = () => null, onWipeOutLabel = 'Limpar', onWipeOutIcon = 'alert',
-     isSubmit = true, onSubmit = () => null, onSubmitLabel = 'Próximo', onSubmitIcon = 'login',
+     isSubmit = true, onSubmit = () => null, onSubmitLabel = 'Próximo', onSubmitIcon = 'check',
  }) => (
 
     <View style={[FlexStyle.makeFlex(1), FlexStyle.flexOrientation.flexRow]}>

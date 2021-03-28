@@ -1,5 +1,5 @@
 import React from "react";
-import { View, SafeAreaView, ScrollView } from "react-native";
+import {View, SafeAreaView, ScrollView, BackHandler} from "react-native";
 import {Pagination} from "../../model/pagination.model";
 import {updateUsuario, updateUsuarios} from "../../service/redux/actions/usuario.action";
 import {connect} from "react-redux";
@@ -19,6 +19,7 @@ import {ErrorHandler} from "../../util/handler/error.handler";
 import {UsuarioService} from "../../service/usuario.service";
 import {updateUsuarioEdit} from "../../service/redux/actions/usuario-edit.action";
 import {RoutesConstants} from "../../util/constants/routes.constants";
+import {MessageConstants} from "../../util/constants/message.constants";
 
 
 
@@ -37,9 +38,21 @@ class UsuarioEditPage extends React.Component {
             isLoading: false,
         };
     }
+
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', () => true);
+        this._unsubscribe = this.state.navigation.addListener('focus', () => {
+            let {usuarioEdit} = this.props;
+            this.setState({
+                usuario: new Usuario(usuarioEdit.id, usuarioEdit.nome, new Date(usuarioEdit.dataNascimento), usuarioEdit.foto),
+                usuarioBackup: new Usuario(usuarioEdit.id, usuarioEdit.nome, new Date(usuarioEdit.dataNascimento), usuarioEdit.foto),
+            })
+        });
+    }
+
     render() {
         if(this.state.isLoading) return <View style={[PaddingStyle.makePadding(10,10,10,10), FlexStyle.makeFlex(1), PositionStyle.centralizadoXY]}><ActivityIndicatorComponent /></View>
-        let {usuario, erroNome, usuarioBackup} = this.state;
+        let {usuario, erroNome, erroDataNascimento, usuarioBackup} = this.state;
         return(
             <>
                 <CustomHeader drawerNavigation={this.state.navigation}/>
@@ -61,8 +74,8 @@ class UsuarioEditPage extends React.Component {
                                 value={usuario.dataNascimento}
                                 onChange={dataN => this.setState({usuario: usuario.setField('dataNascimento', dataN)})}
                             />
-                            <HelperText type="error" visible={erroNome.present}>
-                                {erroNome.message}
+                            <HelperText type="error" visible={erroDataNascimento.present}>
+                                {erroDataNascimento.message}
                             </HelperText>
                         </View>
                         <View style={MarginStyle.makeMargin(0,0,0,5)}>
@@ -91,7 +104,8 @@ class UsuarioEditPage extends React.Component {
         this.setLoading(true);
         UsuarioService.updateUsuario(this.state.usuario)
             .then(response => {
-                alert("Operação realizada com sucesso!")
+                MessageConstants.MOSTRAR_MENSAGEM_DE_SUCESSO();
+                this.state.navigation.goBack();
             }).catch(erro => alert(`${ErrorHandler.getTitle(erro)} \n ${ErrorHandler.getMessage(erro)}`))
             .finally(() => this.setLoading(false));
     }
@@ -106,7 +120,7 @@ class UsuarioEditPage extends React.Component {
             this.setState({erroDataNascimento: new FormError(true, ErrorHandler.erroCampoObrigatorio('data de nascimento'))})
             return false;
         }
-        if((nome.length < 3) || (nome.length > 100)){
+        if((nome.length < 5) || (nome.length > 100)){
             this.setState({erroNome: new FormError(true, ErrorHandler.erroTamanhoCampoObrigatorio('nome', 3, 100))})
             return false;
         }
