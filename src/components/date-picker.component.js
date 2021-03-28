@@ -48,7 +48,9 @@ export class DatePicker extends React.Component{
                         display="default"
                         onChange={datan => {
                             this.setState({showing: false});
-                            this.state.onChange(new Date(datan.nativeEvent.timestamp));
+                            if(datan.type !== 'dismissed'){
+                                this.state.onChange(new Date(datan.nativeEvent.timestamp));
+                            }
                         }}
                     />)
                 }

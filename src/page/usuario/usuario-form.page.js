@@ -32,6 +32,7 @@ export class UsuarioFormPage extends React.Component {
     }
 
     componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', () => true);
         this._unsubscribe = this.state.navigation.addListener('focus', () => {
             this.setState({usuario: new Usuario()})
         });
@@ -39,7 +40,7 @@ export class UsuarioFormPage extends React.Component {
 
     render() {
         if(this.state.isLoading) return <View style={[PaddingStyle.makePadding(10,10,10,10), FlexStyle.makeFlex(1), PositionStyle.centralizadoXY]}><ActivityIndicatorComponent /></View>
-        let {usuario, erroNome, erroDataNascimento} = this.state;
+        let {usuario, erroNome} = this.state;
         return(
             <>
                 <CustomHeader drawerNavigation={this.state.navigation}/>
@@ -61,9 +62,6 @@ export class UsuarioFormPage extends React.Component {
                                 value={usuario.dataNascimento}
                                 onChange={dataN => this.setState({usuario: usuario.setField('dataNascimento', dataN)})}
                             />
-                            <HelperText type="error" visible={erroNome.present}>
-                                {erroNome.message}
-                            </HelperText>
                         </View>
                         <View style={MarginStyle.makeMargin(0,0,0,5)}>
                             <FilePicker

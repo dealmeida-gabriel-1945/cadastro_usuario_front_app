@@ -12,5 +12,5 @@ export const UsuarioService = {
     listUsuario: (pageable) => (axios.get(`${BASE_URL_USUARIO}?size=${pageable.size}&page=${pageable.page}`)),
     getFoto: (id) => (axios.get(`${BASE_URL_USUARIO}/${id}/foto`)),
     deleteUsuario: (id) => (axios.delete(`${BASE_URL_USUARIO}/${id}`)),
-    geraArquivo: () => (null),
+    urlImprimir: `${BASE_URL_USUARIO}/imprimir`,
 }

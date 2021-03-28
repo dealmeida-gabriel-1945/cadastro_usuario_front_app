@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    View, Image
+    View, Image, Linking
 } from "react-native";
 import {FlexStyle} from "../style/flex.style";
 import {DrawerContentScrollView, DrawerItem} from "@react-navigation/drawer";
@@ -38,7 +38,7 @@ export const DrawerContent = (props) => (
             </View>
         </DrawerContentScrollView>
         <Drawer.Section>
-            <DrawerItem label={'Saiba Mais'} onPress={() => redirectTo(props.navigation, RoutesConstants.SAIBA_MAIS)}
+            <DrawerItem label={'Site da Develcode'} onPress={() => Linking.openURL('https://www.develcode.com.br/')}
                         icon={(color, size) => (<Icon name={'information'} color={ColorConstants.VERDE_AGUA} size={25}/>)}
             />
         </Drawer.Section>

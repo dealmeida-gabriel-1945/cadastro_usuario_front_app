@@ -16,10 +16,9 @@ import {MessageConstants} from "../util/constants/message.constants";
 import {ErrorHandler} from "../util/handler/error.handler";
 import {updateUsuarioEdit} from "../service/redux/actions/usuario-edit.action";
 import {RoutesConstants} from "../util/constants/routes.constants";
-import {updateUsuarioFoto} from "../service/redux/actions/usuario-foto.action";
 
 const ShowUsuario = ({
-    usuario = null, navigation,
+    usuario = null, navigation, onDelete = () => {},
      dispatchUpdateUsuario, dispatchUpdateUsuarioEdit,
 }) => {
     return(
@@ -67,7 +66,7 @@ const ShowUsuario = ({
                             icon="delete"
                             color={ColorConstants.VERMELHO}
                             size={30}
-                            onPress={() => deleteUser(usuario.usuario?.id, dispatchUpdateUsuario)}
+                            onPress={() => deleteUser(usuario.usuario?.id, dispatchUpdateUsuario, onDelete)}
                         />
                     </View>
                 </View>
@@ -92,7 +91,7 @@ const montaImagem = (base64) => {
         : {uri: `data:image/png;base64,${base64}`};
 }
 
-const deleteUser = (id, exit) => {
+const deleteUser = (id, exit, onDelete) => {
     AlertFunction(
         'Atenção', 'Você deseja remover este usuário?',
         [
@@ -102,6 +101,7 @@ const deleteUser = (id, exit) => {
                     .then(res => {
                         MessageConstants.MOSTRAR_MENSAGEM_DE_SUCESSO();
                         exit(null);
+                        onDelete();
                     }).catch(erro => alert(ErrorHandler.getMessage(erro)))
             })
         ]

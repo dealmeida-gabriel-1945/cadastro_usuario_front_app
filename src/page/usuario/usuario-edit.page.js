@@ -39,9 +39,20 @@ class UsuarioEditPage extends React.Component {
         };
     }
 
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', () => true);
+        this._unsubscribe = this.state.navigation.addListener('focus', () => {
+            let {usuarioEdit} = this.props;
+            this.setState({
+                usuario: new Usuario(usuarioEdit.id, usuarioEdit.nome, new Date(usuarioEdit.dataNascimento), usuarioEdit.foto),
+                usuarioBackup: new Usuario(usuarioEdit.id, usuarioEdit.nome, new Date(usuarioEdit.dataNascimento), usuarioEdit.foto),
+            })
+        });
+    }
+
     render() {
         if(this.state.isLoading) return <View style={[PaddingStyle.makePadding(10,10,10,10), FlexStyle.makeFlex(1), PositionStyle.centralizadoXY]}><ActivityIndicatorComponent /></View>
-        let {usuario, erroNome, usuarioBackup} = this.state;
+        let {usuario, erroNome, erroDataNascimento, usuarioBackup} = this.state;
         return(
             <>
                 <CustomHeader drawerNavigation={this.state.navigation}/>
@@ -63,8 +74,8 @@ class UsuarioEditPage extends React.Component {
                                 value={usuario.dataNascimento}
                                 onChange={dataN => this.setState({usuario: usuario.setField('dataNascimento', dataN)})}
                             />
-                            <HelperText type="error" visible={erroNome.present}>
-                                {erroNome.message}
+                            <HelperText type="error" visible={erroDataNascimento.present}>
+                                {erroDataNascimento.message}
                             </HelperText>
                         </View>
                         <View style={MarginStyle.makeMargin(0,0,0,5)}>
@@ -109,7 +120,7 @@ class UsuarioEditPage extends React.Component {
             this.setState({erroDataNascimento: new FormError(true, ErrorHandler.erroCampoObrigatorio('data de nascimento'))})
             return false;
         }
-        if((nome.length < 3) || (nome.length > 100)){
+        if((nome.length < 5) || (nome.length > 100)){
             this.setState({erroNome: new FormError(true, ErrorHandler.erroTamanhoCampoObrigatorio('nome', 3, 100))})
             return false;
         }

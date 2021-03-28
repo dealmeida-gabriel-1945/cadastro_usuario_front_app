@@ -1,13 +1,13 @@
 import React from "react";
 import {
-    View, BackHandler,
-    SafeAreaView, ScrollView, RefreshControl, Pressable
+    View,
+    SafeAreaView, ScrollView, RefreshControl, Linking, BackHandler
 } from "react-native";
 import {connect} from "react-redux";
 import {updateUsuario} from "../../service/redux/actions/usuario.action";
 import {UsuarioService} from "../../service/usuario.service";
 import {Pagination} from "../../model/pagination.model";
-import {DataTable} from "react-native-paper";
+import {DataTable, Button as PaperButton, Text} from "react-native-paper";
 import {FlexStyle} from "../../style/flex.style";
 import {PositionStyle} from "../../style/position.style";
 import {PaddingStyle} from "../../style/padding.style";
@@ -35,6 +35,7 @@ class UsuarioListPage extends React.Component {
     }
 
     componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', () => true);
         this._unsubscribe = this.state.navigation.addListener('focus', () => {
             this.buscaPage()
         });
@@ -57,7 +58,7 @@ class UsuarioListPage extends React.Component {
         return(
             <>
                 <CustomHeader drawerNavigation={this.state.navigation}/>
-                <ShowUsuario navigation={this.props.navigation}/>
+                <ShowUsuario navigation={this.props.navigation} onDelete={()=>this.buscaPage()}/>
                 <SafeAreaView style={FlexStyle.makeFlex(1)}>
                 <ScrollView
                     contentContainerStyle={FlexStyle.makeFlex(1)}
@@ -68,7 +69,7 @@ class UsuarioListPage extends React.Component {
                         />
                     }
                 >
-                    <View stle={[MarginStyle.makeMargin(10,10,10,10)]}>
+                    <View stle={[FlexStyle.makeFlex(1), MarginStyle.makeMargin(10,10,10,10)]}>
                         <DataTable>
                             <DataTable.Header>
                                 <DataTable.Title>#</DataTable.Title>
@@ -88,13 +89,13 @@ class UsuarioListPage extends React.Component {
                                 label={`${(pagination.page * pagination.size) + 1}-${(pagination.page * pagination.size) + pagination.size} de ${pagination.totalElements?pagination.totalElements: 0}`}
                             />
                         </DataTable>
-                        <Button transparent onPress={() => {
-                            this.setLoading(true);
-                            UsuarioService.geraArquivo()
-                                .then(res => console.log(res))
-                        }}>
-                            <Icon name='download-cloud' style={{color: ColorConstants.VERDE_AGUA}}/>
-                        </Button>
+                            <PaperButton style={MarginStyle.makeMargin(10,10,10,10)}
+                                         icon="cloud-download" mode="contained"
+                                         onPress={() => {
+                                Linking.openURL(UsuarioService.urlImprimir)
+                            }}>
+                                Exportar como PDF
+                            </PaperButton>
                     </View>
                 </ScrollView>
             </SafeAreaView>
