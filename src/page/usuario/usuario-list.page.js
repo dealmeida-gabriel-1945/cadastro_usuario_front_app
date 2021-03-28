@@ -88,6 +88,13 @@ class UsuarioListPage extends React.Component {
                                 label={`${(pagination.page * pagination.size) + 1}-${(pagination.page * pagination.size) + pagination.size} de ${pagination.totalElements?pagination.totalElements: 0}`}
                             />
                         </DataTable>
+                        <Button transparent onPress={() => {
+                            this.setLoading(true);
+                            UsuarioService.geraArquivo()
+                                .then(res => console.log(res))
+                        }}>
+                            <Icon name='download-cloud' style={{color: ColorConstants.VERDE_AGUA}}/>
+                        </Button>
                     </View>
                 </ScrollView>
             </SafeAreaView>
